@@ -1,5 +1,15 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
-var productSchema = mongoose.Schema ({
-    
+const productSchema = new mongoose.Schema({
+    add: String,
+    remove: String,
+    view: string,
+    slug: {
+        type: String,
+        lowercase: true,
+    }
 });
+
+var Product = mongoose.model("Product", productSchema);
+
+module.exports = Product;
