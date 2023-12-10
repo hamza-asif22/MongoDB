@@ -1,145 +1,68 @@
-document.addEventListener("DOMContentLoaded", fetchProducts);
+async function addData() {
+    const newData = document.getElementById('newData').value;
+    if (!newData) {
+        alert('Please enter data to add.');
+        return;
+    }
 
-let MONGODB_URL = "mongodb://localhost:27017/Mongo-Project";
+    const connectionString = 'mongodb://localhost:27017/Mongo-Project';
+    const apiUrl = `/api/addData`;
 
-async function fetchProducts() {
     try {
-        const response = await fetch(MONGODB_URL);
-        const products = await response.json();
-        let productCardsHTML = '';
-        products.forEach((product) => {
-            productCardsHTML += `
-            <div class="product" data-id="${product._id}">
-                <h3>Name: ${product.title}</h3>
-                <p>Model: ${product.Model}</p>
-                <p>Price: ${product.price}</p>
-                <button onclick="handleDelete(this)">Delete</button>
-                <button onclick="openEditForm(); handleUpdate(this)">Edit</button>
-            </div>`;
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ data: newData, connectionString }),
         });
-        document.getElementById('products').innerHTML = productCardsHTML;
 
+        const result = await response.json();
+        alert(result.message);
     } catch (error) {
-        console.error("Error while fetching products:", error);
+        console.error('Error adding data:', error);
+        alert('Error adding data. Check the console for details.');
     }
 }
 
-function addProduct() {
-    let title = document.getElementById('title').value;
-    let Model = document.getElementById('model').value;
-    let price = document.getElementById('price').value;
-    if (!title || !Model || !price) return alert('All fields are required');
+async function removeData() {
+    const dataToRemove = document.getElementById('dataToRemove').value;
+    if (!dataToRemove) {
+        alert('Please enter data to remove.');
+        return;
+    }
 
-    let product = {
-        title,
-        Model,
-        price
-    };
-    fetch(MONGODB_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(product)
-    })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('title').value = '';
-            document.getElementById('model').value = '';
-            document.getElementById('price').value = '';
-            fetchProducts();
-        })
-        .catch(error => {
-            console.error('Error:', error);
+    const connectionString = 'mongodb://localhost:27017/';
+    const apiUrl = `/api/removeData`;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ data: dataToRemove, connectionString }),
         });
-}
 
-async function handleDelete(element) {
-    let productElement = element.closest('.product');
-    if (!productElement) {
-        console.error('Product element not found');
-        return;
+        const result = await response.json();
+        alert(result.message);
+    } catch (error) {
+        console.error('Error removing data:', error);
+        alert('Error removing data. Check the console for details.');
     }
-    let id = productElement.getAttribute('data-id');
-    if (!id) {
-        console.error('Product ID not found');
-        return;
+}
+
+async function viewData() {
+    const connectionString = 'mongodb://localhost:27017/';
+    const apiUrl = `/api/viewData?connectionString=${encodeURIComponent(connectionString)}`;
+
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        alert('Error fetching data. Check the console for details.');
     }
-    await fetch(`${MONGODB_URL}/${id}`, {
-        method: 'DELETE'
-    })
-        .then(response => response.json())
-        .then(data => {
-            fetchProducts();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
 }
-
-async function handleUpdate(element) {
-    let productElement = element.closest('.product');
-    if (!productElement) {
-        console.error('Product element not found');
-        return;
-    }
-    let id = productElement.getAttribute('data-id');
-    if (!id) {
-        console.error('Product ID not found');
-        return;
-    }
-    document.getElementById('editForm').setAttribute('data-id', id);
-    const response = await fetch(`${MONGODB_URL}/${id}`);
-    const product = await response.json();
-    document.getElementById('editTitle').value = product.title;
-    document.getElementById('editModel').value = product.Model;
-    document.getElementById('editPrice').value = product.price;
-
-    openEditForm();
-}
-
-function submitEditForm() {
-    let id = document.getElementById('editForm').getAttribute('data-id');
-    let title = document.getElementById('editTitle').value;
-    let Model = document.getElementById('editModel').value;
-    let price = document.getElementById('editPrice').value;
-
-    if (!title || !Model || !price) {
-        alert('All fields are required');
-        return;
-    }
-
-    let product = {
-        title,
-        Model,
-        price
-    };
-
-    fetch(`${MONGODB_URL}/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(product)
-    })
-        .then(response => response.json())
-        .then(data => {
-            closeEditForm();
-            fetchProducts();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-
-function openEditForm() {
-    document.getElementById('editForm').style.display = 'block';
-    document.getElementById('overlay').style.display = 'block';
-}
-
-function closeEditForm() {
-    document.getElementById('editForm').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
-}
-
-document.body.innerHTML += '<div id="overlay" class="overlay"></div>';
