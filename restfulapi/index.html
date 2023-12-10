@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <h1>Data Management</h1>
+
+    <div id="addData">
+        <h2>Add Data</h2>
+        <input type="text" id="newData" placeholder="Enter data">
+        <button onclick="addData()">Add Data</button>
+    </div>
+
+    <div id="removeData">
+        <h2>Remove Data</h2>
+        <input type="text" id="dataToRemove" placeholder="Enter data to remove">
+        <button onclick="removeData()">Remove Data</button>
+    </div>
+
+    <div id="viewData">
+        <h2>View Data</h2>
+        <button onclick="viewData()">View Data</button>
+        <pre id="result"></pre>
+    </div>
+
+    <script src="index.js"></script>
+
+</body>
+</html>
