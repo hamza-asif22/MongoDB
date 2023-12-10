@@ -18,27 +18,9 @@ router.get("/:id", async (req, res) => {
 });
 
 
-router.put("/:id", async (req, res) => {
-    let product = await Product.findById(req.params.id);
-    product.title = req.body.title;
-    product.Model = req.body.Model;
-    product.price = req.body.price;
-    await product.save();
-    return res.send(product);
-});
-
 router.delete('/:id', async (req, res) => {
     let product = await Product.findByIdAndDelete(req.params.id);
 
-    return res.send(product);
-});
-
-router.post("/", async (req, res) => {
-    let product = new Product();
-    product.title = req.body.title;
-    product.Model = req.body.Model;
-    product.price = req.body.price;
-    await product.save();
     return res.send(product);
 });
 
