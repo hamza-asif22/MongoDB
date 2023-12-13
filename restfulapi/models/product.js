@@ -1,13 +1,7 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-    add: String,
-    remove: String,
-    view: string,
-    slug: {
-        type: String,
-        lowercase: true,
-    }
+    title: String,
 });
 
 var Product = mongoose.model("Product", productSchema);

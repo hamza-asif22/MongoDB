@@ -1,11 +1,11 @@
 const express = require("express");
 let router = express.Router();
 
-router.get("/",async(req,res)=>{
-    return res.send(["Pen","Pencil"]);
-});
+// router.get("/",async(req,res)=>{
+//     return res.send(["Pen","Pencil"]);
+// });
 
-router.get("/:id", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         let product = await Product.findById(req.params.id);
         if (!product)
@@ -18,10 +18,10 @@ router.get("/:id", async (req, res) => {
 });
 
 
-router.delete('/:id', async (req, res) => {
-    let product = await Product.findByIdAndDelete(req.params.id);
+// router.delete('/:id', async (req, res) => {
+//     let product = await Product.findByIdAndDelete(req.params.id);
 
-    return res.send(product);
-});
+//     return res.send(product);
+// });
 
-module.exports = router;
+// module.exports = router;

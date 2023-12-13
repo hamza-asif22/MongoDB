@@ -45,7 +45,10 @@ mongoose.connect(config.get("db"),{useNewUrlParser: true,useUnifiedTopology: tru
 .then(()=> console.log("Connected to Mongo...."))
 .catch((error)=> console.log(error.message));
 
+
+const PORT = process.env.PORT || 3030;
+app.listen(PORT, () => {
+  console.log('Server is running on port ${PORT}');
+});
+
 module.exports = app;
-
-
-
